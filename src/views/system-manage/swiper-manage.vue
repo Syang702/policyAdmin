@@ -37,7 +37,9 @@
         </template>
       </el-table-column>
       <el-table-column label="跳转链接" align="center">
-        <template slot-scope="scope">{{ scope.row.url }}</template>
+        <template slot-scope="scope">{{
+          scope.row.url == "/advisory" ? "高企免费评估" : "政策免费查询"
+        }}</template>
       </el-table-column>
       <el-table-column label="排序" align="center">
         <template slot-scope="scope">{{ scope.row.order }}</template>
@@ -90,7 +92,7 @@
         label-width="110px"
         width="30%"
       >
-        <el-form-item label="图片" prop="imgs">
+        <el-form-item label="图片">
           <el-upload
             class="avatar-uploader"
             action
@@ -107,7 +109,15 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="跳转链接" prop="url">
-          <el-input v-model="swiperForm.url" />
+          <!-- <el-input v-model="swiperForm.url" /> -->
+          <el-select v-model="swiperForm.url">
+            <el-option
+              v-for="item in urlData"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="排序" prop="order">
           <el-input v-model="swiperForm.order" />
@@ -159,10 +169,14 @@ export default {
         order: "",
         type: 1
       },
+      urlData: [
+        { name: "高企免费评估", id: "/advisory" },
+        { name: "政策免费查询", id: "/company" }
+      ],
       image: "",
       rules: {
-        url: [{ message: "请输入链接(商品ID)", trigger: "blur" }],
-        image: [{ required: true, message: "请上传图片", trigger: "blur" }],
+        // imgs: [{ required: true, message: "请上传图片", trigger: "blur" }],
+        url: [{ required: true, message: "请选择跳转链接", trigger: "change" }],
         order: [{ required: true, message: "请输入排序", trigger: "blur" }]
       },
       dialogStatus: "",

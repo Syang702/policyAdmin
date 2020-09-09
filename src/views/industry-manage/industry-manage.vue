@@ -11,7 +11,7 @@
         >
         <el-upload
           class="upload-demo"
-          action="admin/Policy/excelIndustry"
+          action="/public/index.php/admin/Policy/excelIndustry"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
         >

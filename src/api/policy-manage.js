@@ -76,3 +76,19 @@ export function excelPolicy(data) {
     data
   });
 }
+//删除文件
+export function delFile(id) {
+  return request({
+    url: "admin/File/delFile",
+    method: "post",
+    data: { id }
+  });
+}
+//文件列表
+export function fileList(data) {
+  return request({
+    url: "admin/File/fileList",
+    method: "post",
+    data
+  });
+}

@@ -12,7 +12,7 @@
         <!-- <el-button type="primary">导出</el-button> -->
         <el-upload
           class="upload-demo"
-          action="admin/Policy/excelDepartment"
+          action="/public/index.php/admin/Policy/excelDepartment"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
         >

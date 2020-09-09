@@ -114,6 +114,52 @@ export const asyncRoutes = [
     ]
   },
   {
+    //搜索设置
+    id: 11,
+    path: "/search-Manage",
+    component: Layout,
+    redirect: "/search-Manage/search-Manage",
+    meta: {
+      title: "搜索管理",
+      icon: "搜索管理"
+    },
+    children: [
+      {
+        id: 11,
+        path: "/search-Manage/search-Manage",
+        name: "search-Manage",
+        component: () => import("@/views/search-Manage/search-Manage"),
+        meta: {
+          title: "搜索管理",
+          icon: "搜索管理"
+        }
+      }
+    ]
+  },
+  {
+    //评估设置
+    id: 11,
+    path: "/evaluate-manage",
+    component: Layout,
+    redirect: "/evaluate-manage/evaluate-manage",
+    meta: {
+      title: "评估管理",
+      icon: "评估管理"
+    },
+    children: [
+      {
+        id: 11,
+        path: "/evaluate-manage/evaluate-manage",
+        name: "evaluate-manage",
+        component: () => import("@/views/evaluate-manage/evaluate-manage"),
+        meta: {
+          title: "评估管理",
+          icon: "评估管理"
+        }
+      }
+    ]
+  },
+  {
     //公司列表
     // id: 10,
     path: "/company-list",
@@ -336,6 +382,7 @@ export const asyncRoutes = [
   },
   {
     //查询记录
+    id: 17,
     path: "/inquiry-record",
     component: Layout,
     redirect: "/inquiry-record/view-report",
@@ -345,7 +392,7 @@ export const asyncRoutes = [
     },
     children: [
       {
-        id: 14,
+        id: 17,
         path: "/inquiry-record/view-report",
         name: "view-report",
         component: () => import("@/views/inquiry-record/view-report"),
@@ -355,7 +402,7 @@ export const asyncRoutes = [
         }
       },
       {
-        id: 14,
+        id: 17,
         path: "/inquiry-record/view-score",
         name: "view-score",
         component: () => import("@/views/inquiry-record/view-score"),

@@ -11,7 +11,7 @@
         >
         <el-upload
           class="upload-demo"
-          action="admin/Policy/excelPolicy"
+          action="/public/index.php/admin/Policy/excelPolicy"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
         >
@@ -89,7 +89,7 @@
         </el-table-column>
         <el-table-column prop="create_time" label="创建时间" align="center">
         </el-table-column>
-        <el-table-column label="操作" align="center" width="320">
+        <el-table-column label="操作" align="center" width="360">
           <template slot-scope="scope">
             <el-button
               type="primary"
@@ -109,6 +109,15 @@
               @click="deleteIndustry(scope.row.id)"
               >删除</el-button
             >
+            <el-button
+              type="success"
+              icon="el-icon-upload"
+              size="small"
+              round
+              plain
+              @click="addFile(scope.row.id)"
+              >管理政策文件</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -119,6 +128,59 @@
         @pagination="policyList"
       />
     </div>
+    <!-- 文件弹窗 -->
+    <!-- :title="textMap[dialogStatus]" -->
+    <el-dialog
+      :modal="false"
+      center
+      title="政策文件"
+      :visible.sync="UserDialogVisible"
+      width="50%"
+    >
+      <el-form
+        :model="userForm"
+        :rules="rules"
+        ref="userForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <div v-if="this.dialogStatus == 'update'">
+          <el-form-item label="ID" prop="id" style="display:none;">
+            <el-input v-model="userForm.policy_id"></el-input>
+          </el-form-item>
+        </div>
+        <el-form-item label="政策文件">
+          <el-upload
+            class="avatar-uploader"
+            action="/public/index.php/admin/File/uploadFile"
+            :show-file-list="false"
+            ref="upload"
+            :data="policyID"
+            :on-success="handleSuccess"
+          >
+            <el-button type="primary" icon="el-icon-upload" size="small" round
+              >点击上传</el-button
+            >
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="已经上传">
+          <div v-for="(item, index) in fileData" :key="index" class="fileData">
+            <div class="fileName">
+              {{ item.file_name + "." + item.file_path.split(".")[1] }}
+            </div>
+            <div>
+              <el-button
+                type="primary"
+                size="small"
+                round
+                @click="delFile(item.id)"
+                >删除</el-button
+              >
+            </div>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -129,7 +191,10 @@ import {
   delPolicy,
   editPolicy,
   editSubmit,
-  excelPolicy
+  excelPolicy,
+  uploadFile,
+  fileList,
+  delFile
 } from "@/api/policy-manage";
 import { industryList, departList } from "@/api/area";
 import areaList from "../../assets/areaList.js";
@@ -183,7 +248,12 @@ export default {
       },
       options_industry: [],
       options_area: areaList,
-      options_depart: []
+      options_depart: [],
+      userForm: {},
+      //   fileList: [],
+      policyID: {},
+      fileName: "",
+      fileData: []
     };
   },
   components: { Pagination },
@@ -286,6 +356,40 @@ export default {
     handleAvatarSuccess() {
       //导入模板
       this.policyList();
+    },
+    addFile(id) {
+      this.policyID = { policy_id: id };
+      this.fileList(id);
+      setTimeout(() => {
+        this.UserDialogVisible = true;
+      }, 100);
+    },
+    handleSuccess(response, file, fileList) {
+      //上传成功后的回调
+      this.fileList(this.policyID.policy_id);
+    },
+    fileList(id) {
+      let params = {
+        page: "",
+        pagesize: "",
+        policy_id: id
+      };
+      fileList(params).then(res => {
+        this.fileData = res.data;
+      });
+    },
+    delFile(id) {
+      //删除上传文件
+      delFile(id).then(res => {
+        this.fileList(this.policyID.policy_id);
+      });
+    },
+    handleChange(file, fileList) {
+      this.fileName = file.name;
+    },
+    submitEditForm() {
+      this.$refs.upload.submit();
+      this.UserDialogVisible = false;
     }
   }
 };
@@ -324,6 +428,12 @@ export default {
   }
   .declare {
     display: flex;
+  }
+  .fileData {
+    display: flex;
+    .fileName {
+      margin-right: 30px;
+    }
   }
 }
 </style>
